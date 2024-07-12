@@ -13,6 +13,7 @@ from .ff_data_schema import FF_DATA_SCHEMA
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 
+yaml_loader = yaml.YAML(typ='safe', pure=True)
 
 def check_ff_list(inp_list):
     """Check a list of atom types:
@@ -40,7 +41,7 @@ def load_yaml():
     yamlfullpath = os.path.join(THISDIR, 'ff_data.yaml')
 
     with open(yamlfullpath, 'r') as stream:
-        ff_data = yaml.safe_load(stream)
+        ff_data = yaml_loader.load(stream)
 
     FF_DATA_SCHEMA(ff_data)
     return ff_data

@@ -102,6 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+examples/run_h2s
 
 *.swp
 

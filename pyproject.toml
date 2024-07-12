@@ -29,7 +29,7 @@ dependencies = [
     "aiida-zeopp~=2.0",
     "aiida-raspa~=2.0",
     "calc-pe~=1.0,>=1.0.1",
-    'oximachinerunner @ git+https://github.com/mpougin/oximachinerunner.git@update-packaging',
+  #  'oximachinerunner @ git+https://github.com/mpougin/oximachinerunner.git@update-packaging',
     "phonopy~=2.9",
 ]
 

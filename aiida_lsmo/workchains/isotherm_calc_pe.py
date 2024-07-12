@@ -18,7 +18,7 @@ CifData = DataFactory('core.cif')  #pylint: disable=invalid-name
 
 
 class IsothermCalcPEWorkChain(WorkChain):
-    """ Compute CO2 parassitic energy (PE) after running IsothermWorkChain for CO2 and N2 at 300K."""
+    """ Compute CO2 parasitic energy (PE) after running IsothermWorkChain for CO2 and N2 at 300K."""
 
     parameters_schema = FF_PARAMETERS_VALIDATOR.extend({
         Required('zeopp_probe_scaling', default=1.0, description="scaling probe's diameter: molecular_rad * scaling"):

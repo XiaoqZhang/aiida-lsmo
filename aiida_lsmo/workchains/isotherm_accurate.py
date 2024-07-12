@@ -12,6 +12,7 @@ from aiida.engine import WorkChain, ToContext, append_, while_, if_
 from aiida_lsmo.utils import check_resize_unit_cell, dict_merge, validate_dict
 from aiida_lsmo.utils.isotherm_molecules_schema import ISOTHERM_MOLECULES_SCHEMA
 from .parameters_schemas import FF_PARAMETERS_VALIDATOR, Required, Optional, NUMBER
+yaml_loader = yaml.YAML(typ='safe', pure=True)
 # import sub-workchains
 RaspaBaseWorkChain = WorkflowFactory('raspa.base')  # pylint: disable=invalid-name
 
@@ -32,7 +33,7 @@ def get_molecule_dict(molecule_name):
     thisdir = os.path.dirname(os.path.abspath(__file__))
     yamlfile = os.path.join(thisdir, 'isotherm_data', 'isotherm_molecules.yaml')
     with open(yamlfile, 'r') as stream:
-        yaml_dict = yaml.safe_load(stream)
+        yaml_dict = yaml_loader.load(stream)
         ISOTHERM_MOLECULES_SCHEMA(yaml_dict)
     molecule_dict = yaml_dict[molecule_name.value]
     return Dict(molecule_dict)
@@ -276,7 +277,8 @@ class IsothermAccurateWorkChain(WorkChain):
         # Understand if IsothermMultiTempWorkChain is calling this work chain
         if 'geometric' in self.inputs:
             self.ctx.multitemp_mode = 'run_single_temp'
-        elif 'temperature_list' in self.ctx.parameters.attributes:
+        # elif 'temperature_list' in self.ctx.parameters.attributes:
+        elif 'temperature_list' in self.ctx.parameters.base.attributes.all:
             self.ctx.multitemp_mode = 'run_geom_only'
         else:
             self.ctx.multitemp_mode = None
@@ -592,6 +594,6 @@ class IsothermAccurateWorkChain(WorkChain):
                                   **gcmc_out_dict))
 
         if not self.ctx.multitemp_mode == 'run_geom_only':
-            self.report('Isotherm {} @ {}K computed: ouput Dict<{}>'.format(self.ctx.molecule['name'],
+            self.report('Isotherm {} @ {}K computed: output Dict<{}>'.format(self.ctx.molecule['name'],
                                                                             self.ctx.temperature,
                                                                             self.outputs['output_parameters'].pk))

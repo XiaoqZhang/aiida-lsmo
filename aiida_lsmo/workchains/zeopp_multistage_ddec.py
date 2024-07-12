@@ -84,7 +84,7 @@ class ZeoppMultistageDdecWorkChain(WorkChain):
         return ToContext(msddec_wc=running)
 
     def run_zeopp_after(self):
-        """Run Zeo++ for the oprimized structure"""
+        """Run Zeo++ for the optimized structure"""
         zeopp_inp = AttributeDict(self.exposed_inputs(ZeoppCalculation, 'zeopp'))
         zeopp_inp['parameters'] = self.inputs.zeopp.parameters
         zeopp_inp['structure'] = self.ctx.msddec_wc.outputs.structure_ddec

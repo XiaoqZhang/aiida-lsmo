@@ -12,7 +12,7 @@ from aiida.engine import WorkChain, if_
 from aiida_lsmo.utils import check_resize_unit_cell, validate_dict
 
 from .parameters_schemas import FF_PARAMETERS_VALIDATOR, NUMBER, Required
-
+yaml_loader = yaml.YAML(typ='safe', pure=True) 
 RaspaBaseWorkChain = WorkflowFactory('raspa.base')  #pylint: disable=invalid-name
 
 # Defining DataFactory, CalculationFactory and default parameters
@@ -39,7 +39,7 @@ def get_components_dict(conditions, parameters):
     thisdir = os.path.dirname(os.path.abspath(__file__))
     yamlfile = os.path.join(thisdir, 'isotherm_data', 'isotherm_molecules.yaml')
     with open(yamlfile, 'r') as stream:
-        yaml_dict = yaml.safe_load(stream)
+        yaml_dict = yaml_loader.load(stream)
     for key, value in conditions.get_dict()['molfraction'].items():
         components_dict[key] = yaml_dict[key]
         components_dict[key]['molfraction'] = value

@@ -12,6 +12,7 @@ from aiida.engine import WorkChain, ToContext, append_, while_, if_
 from aiida_lsmo.utils import check_resize_unit_cell, dict_merge, validate_dict
 from aiida_lsmo.utils.isotherm_molecules_schema import ISOTHERM_MOLECULES_SCHEMA
 from .parameters_schemas import FF_PARAMETERS_VALIDATOR, Required, Optional, NUMBER
+yaml_loader = yaml.YAML(typ='safe', pure=True) 
 # import sub-workchains
 RaspaBaseWorkChain = WorkflowFactory('raspa.base')  # pylint: disable=invalid-name
 
@@ -32,7 +33,7 @@ def get_molecule_dict(molecule_name):
     thisdir = os.path.dirname(os.path.abspath(__file__))
     yamlfile = os.path.join(thisdir, 'isotherm_data', 'isotherm_molecules.yaml')
     with open(yamlfile, 'r') as stream:
-        yaml_dict = yaml.safe_load(stream)
+        yaml_dict = yaml_loader.load(stream)
         ISOTHERM_MOLECULES_SCHEMA(yaml_dict)
     molecule_dict = yaml_dict[molecule_name.value]
     return Dict(molecule_dict)
@@ -440,7 +441,7 @@ class IsothermWorkChain(WorkChain):
             self.report('kH larger than the threshold for {}: continue'.format(self.ctx.molecule['name']))
             return True
 
-        self.report('kHh lower than the threshold for {}: stop'.format(self.ctx.molecule['name']))
+        self.report('kH lower than the threshold for {}: stop'.format(self.ctx.molecule['name']))
         return False
 
     def _update_param_for_gcmc(self):
@@ -541,6 +542,6 @@ class IsothermWorkChain(WorkChain):
                                   **gcmc_out_dict))
 
         if not self.ctx.multitemp_mode == 'run_geom_only':
-            self.report('Isotherm {} @ {}K computed: ouput Dict<{}>'.format(self.ctx.molecule['name'],
+            self.report('Isotherm {} @ {}K computed: output Dict<{}>'.format(self.ctx.molecule['name'],
                                                                             self.ctx.temperature,
                                                                             self.outputs['output_parameters'].pk))

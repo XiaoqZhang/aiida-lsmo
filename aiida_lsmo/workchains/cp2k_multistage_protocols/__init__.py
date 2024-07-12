@@ -4,6 +4,8 @@ from pathlib import Path
 from voluptuous import Schema, Optional, Any, MultipleInvalid, Match
 import ruamel.yaml as yaml  # does not convert OFF to False
 
+yaml_loader = yaml.YAML(typ='safe', pure=True)
+
 __all__ = ('PROTOCOL_DIR', 'ISOTHERM_PROTOCOL_SCHEMA')
 
 PROTOCOL_DIR = Path(__file__).resolve().parent
@@ -159,11 +161,11 @@ def load_isotherm_protocol(*, singlefiledata=None, tag=None):
 
     if singlefiledata is not None:
         with singlefiledata.open() as stream:
-            protocol_dict = yaml.safe_load(stream)
+            protocol_dict = yaml_loader.load(stream)
     elif tag is not None:
         yaml_file = PROTOCOL_DIR / (tag + '.yaml')
         with open(yaml_file, 'r') as stream:
-            protocol_dict = yaml.safe_load(stream)
+            protocol_dict = yaml_loader.load(stream)
     else:
         raise ValueError('Provide either path or tag.')
 
@@ -187,7 +189,7 @@ INITIAL_MAGNETIZATION_SCHEMA = Schema(
     required=True)
 
 with open(PROTOCOL_DIR / 'magnetization_data' / 'initial_magnetization.yaml') as handle:
-    INITIAL_MAGNETIZATION = yaml.safe_load(handle)
+    INITIAL_MAGNETIZATION = yaml_loader.load(handle)
     INITIAL_MAGNETIZATION_SCHEMA(INITIAL_MAGNETIZATION)
 
 

@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 import click
 import ase.build
+import time
 
 from aiida.plugins import DataFactory, WorkflowFactory
 from aiida import cmdline
@@ -78,6 +79,7 @@ def run_binding_energy_co2_mof74(cp2k_code, zn_mof74, co2_in_mof74):  # pylint: 
     }
 
     results, node = engine.run_get_node(builder)
+    time.sleep(300)
 
     assert node.is_finished_ok, results
 
